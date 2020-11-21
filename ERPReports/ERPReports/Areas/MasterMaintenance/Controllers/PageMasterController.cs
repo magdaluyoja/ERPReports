@@ -1,12 +1,11 @@
-﻿using System;
+﻿using System.Data.SqlClient;
+using ERPReports.Areas.MasterMaintenance.Models;
+using ERPReports.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Web.Mvc;
-using ERPReports.Areas.MasterMaintenance.Models;
-using ERPReports.Models;
 namespace ERPReports.Areas.MasterMaintenance.Controllers
 {
     public class PageMasterController : Controller
@@ -30,6 +29,17 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
             string sortColumnName = Request["columns[" + Request["order[0][column]"] + "][data]"];
             string sortDirection = Request["order[0][dir]"];
 
+            string GroupLabel = Request["columns[0][search][value]"];
+            string PageName = Request["columns[1][search][value]"];
+            string PageLabel = Request["columns[2][search][value]"];
+            string URL = Request["columns[3][search][value]"];
+            string HasSub = Request["columns[4][search][value]"];
+            string ParentMenu = Request["columns[5][search][value]"];
+            string ParentOrder = Request["columns[6][search][value]"];
+            string Order = Request["columns[7][search][value]"];
+
+            int RetTotalRecords = 0;
+            int RetFilteredRecords = 0;
             try
             {
                 using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ConnectionString.ToString()))
@@ -38,8 +48,31 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
                     conn.Open();
                     using (SqlCommand cmdSql = conn.CreateCommand())
                     {
-                        cmdSql.CommandType = CommandType.Text;
-                        cmdSql.CommandText = "SELECT * FROM mPages WHERE IsDeleted = 0";
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "spPage_GetPageList";
+                        cmdSql.Parameters.AddWithValue("@GroupLabel", GroupLabel);
+                        cmdSql.Parameters.AddWithValue("@PageName", PageName);
+                        cmdSql.Parameters.AddWithValue("@PageLabel", PageLabel);
+                        cmdSql.Parameters.AddWithValue("@URL", URL);
+                        cmdSql.Parameters.AddWithValue("@HasSub", HasSub);
+                        cmdSql.Parameters.AddWithValue("@ParentMenu", ParentMenu);
+                        cmdSql.Parameters.AddWithValue("@ParentOrder", ParentOrder);
+                        cmdSql.Parameters.AddWithValue("@Order", Order);
+
+                        cmdSql.Parameters.AddWithValue("@StartPage", start);
+                        cmdSql.Parameters.AddWithValue("@RowCount", length);
+                        cmdSql.Parameters.AddWithValue("@SearchValue", searchValue);
+                        cmdSql.Parameters.AddWithValue("@SortColumnName", sortColumnName);
+                        cmdSql.Parameters.AddWithValue("@SortDirection", sortDirection);
+                        SqlParameter TotalRecords = cmdSql.Parameters.Add("@TotalRecords", SqlDbType.Int);
+                        SqlParameter FilteredRecords = cmdSql.Parameters.Add("@FilteredRecords", SqlDbType.Int);
+                        TotalRecords.Direction = ParameterDirection.Output;
+                        FilteredRecords.Direction = ParameterDirection.Output;
+
+                        cmdSql.ExecuteNonQuery();
+
+                        RetTotalRecords = Convert.ToInt32(TotalRecords.Value);
+                        RetFilteredRecords = Convert.ToInt32(FilteredRecords.Value);
                         using (SqlDataReader sdr = cmdSql.ExecuteReader())
                         {
                             while (sdr.Read())
@@ -74,44 +107,22 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
 
                 return Json(new { success = false, msg = errmsg }, JsonRequestBehavior.AllowGet);
             }
-            int totalrows = data.Count;
-            if (!string.IsNullOrEmpty(searchValue))//filter
-                data = data.Where(x =>
-                    x.GroupLabel.ToLower().Contains(searchValue.ToLower()) ||
-                    x.PageName.ToLower().Contains(searchValue.ToLower()) ||
-                    x.PageLabel.ToLower().Contains(searchValue.ToLower()) ||
-                    x.URL.ToLower().Contains(searchValue.ToLower()) ||
-                    x.HasSub.ToString().ToLower().Contains(searchValue.ToLower()) ||
-                    x.ParentMenu.ToLower().Contains(searchValue.ToLower()) ||
-                    x.ParentOrder.ToString().ToLower().Contains(searchValue.ToLower()) ||
-                    x.Order.ToString().ToLower().Contains(searchValue.ToLower()) ||
-                    x.Icon.ToLower().Contains(searchValue.ToLower())
-                ).ToList<mPage>();
 
-            int totalrowsafterfiltering = data.Count;
-            if (sortDirection == "asc")
-                data = data.OrderBy(x => TypeHelper.GetPropertyValue(x, sortColumnName)).ToList();
-
-            if (sortDirection == "desc")
-                data = data.OrderByDescending(x => TypeHelper.GetPropertyValue(x, sortColumnName)).ToList();
-
-            data = data.Skip(start).Take(length).ToList<mPage>();
-
-
-            return Json(new { data = data, draw = Request["draw"], recordsTotal = totalrows, recordsFiltered = totalrowsafterfiltering }, JsonRequestBehavior.AllowGet);
+            return Json(new { data = data, draw = Request["draw"], recordsTotal = RetTotalRecords, recordsFiltered = RetFilteredRecords }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult ValidatePageName(string PageName)
         {
             bool isValid = true;
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ConnectionString.ToString()))
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Sql_ERPReports"].ConnectionString.ToString()))
                 {
                     conn.Open();
                     using (SqlCommand cmdSql = conn.CreateCommand())
                     {
-                        cmdSql.CommandType = CommandType.Text;
-                        cmdSql.CommandText = "SELECT PageName FROM mPages WHERE IsDeleted=0 AND PageName='" + PageName + "'";
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "spPage_ValidatePageName";
+                        cmdSql.Parameters.AddWithValue("@PageName", PageName);
                         using (SqlDataReader sdr = cmdSql.ExecuteReader())
                         {
                             if (sdr.HasRows)
@@ -144,13 +155,13 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ToString()))
+                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Sql_ERPReports"].ToString()))
                     {
                         conn.Open();
                         using (SqlCommand cmdSql = conn.CreateCommand())
                         {
                             cmdSql.CommandType = CommandType.StoredProcedure;
-                            cmdSql.CommandText = "Page_InsertUpdate";
+                            cmdSql.CommandText = "spPage_InsertUpdate";
                             cmdSql.Parameters.Clear();
                             cmdSql.Parameters.AddWithValue("@ID", Page.ID);
                             cmdSql.Parameters.AddWithValue("@GroupLabel", Page.GroupLabel == null ? "" : Page.GroupLabel);
@@ -162,10 +173,10 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
                             cmdSql.Parameters.AddWithValue("@ParentOrder", Page.ParentOrder);
                             cmdSql.Parameters.AddWithValue("@Order", Page.Order);
                             cmdSql.Parameters.AddWithValue("@Icon", Page.Icon);
-                            cmdSql.Parameters.AddWithValue("@CreateID", Session["Username"]);
+                            cmdSql.Parameters.AddWithValue("@CreateID", Session["UserName"]);
                             SqlParameter EndMsg = cmdSql.Parameters.Add("@EndMsg", SqlDbType.VarChar, 200);
                             SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.VarChar, 200);
-                            SqlParameter Error = cmdSql.Parameters.Add("@Error", SqlDbType.Bit);
+                            SqlParameter Error = cmdSql.Parameters.Add("@IsError", SqlDbType.Bit);
 
                             EndMsg.Direction = ParameterDirection.Output;
                             Error.Direction = ParameterDirection.Output;
@@ -216,29 +227,33 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
         }
         public ActionResult GetPageDetails(string PageName)
         {
-            mPage userDetails = new mPage();
+            mPage pageDetails = new mPage();
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ConnectionString.ToString()))
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Sql_ERPReports"].ConnectionString.ToString()))
                 {
                     conn.Open();
-                    string getPageSql = "SELECT * FROM mPages WHERE IsDeleted = '0' AND PageName='" + PageName + "'";
-                    using (SqlCommand comm = new SqlCommand(getPageSql, conn))
+                    using (SqlCommand cmdSql = conn.CreateCommand())
                     {
-                        SqlDataReader reader = comm.ExecuteReader();
-                        if (!reader.Read())
-                            throw new InvalidOperationException("No records found.");
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "spPage_GetPageDetails";
+                        cmdSql.Parameters.AddWithValue("@PageName", PageName);
+                        using (SqlDataReader sdr = cmdSql.ExecuteReader())
+                        {
+                            if (!sdr.Read())
+                                throw new InvalidOperationException("No records found.");
 
-                        userDetails.ID = Convert.ToInt32(reader["ID"]);
-                        userDetails.GroupLabel = reader["GroupLabel"].ToString();
-                        userDetails.PageName = reader["PageName"].ToString();
-                        userDetails.PageLabel = reader["PageLabel"].ToString();
-                        userDetails.URL = reader["URL"].ToString();
-                        userDetails.HasSub = Convert.ToInt32(reader["HasSub"]);
-                        userDetails.ParentMenu = reader["ParentMenu"].ToString();
-                        userDetails.ParentOrder = Convert.ToInt32(reader["ParentOrder"]);
-                        userDetails.Order = Convert.ToInt32(reader["Order"]);
-                        userDetails.Icon = reader["Icon"].ToString();
+                            pageDetails.ID = Convert.ToInt32(sdr["ID"]);
+                            pageDetails.GroupLabel = sdr["GroupLabel"].ToString();
+                            pageDetails.PageName = sdr["PageName"].ToString();
+                            pageDetails.PageLabel = sdr["PageLabel"].ToString();
+                            pageDetails.URL = sdr["URL"].ToString();
+                            pageDetails.HasSub = Convert.ToInt32(sdr["HasSub"]);
+                            pageDetails.ParentMenu = sdr["ParentMenu"].ToString();
+                            pageDetails.ParentOrder = Convert.ToInt32(sdr["ParentOrder"]);
+                            pageDetails.Order = Convert.ToInt32(sdr["Order"]);
+                            pageDetails.Icon = sdr["Icon"].ToString();
+                        }
                     }
                     conn.Close();
                 }
@@ -253,26 +268,26 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
 
                 return Json(new { success = false, errors = errmsg }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { success = true, data = new { userData = userDetails } }, JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, data = new { pageDetails = pageDetails } }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult DeletePage(string PageName)
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ConnectionString.ToString()))
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Sql_ERPReports"].ConnectionString.ToString()))
                 {
                     conn.Open();
                     using (SqlCommand cmdSql = conn.CreateCommand())
                     {
                         cmdSql.CommandType = CommandType.StoredProcedure;
-                        cmdSql.CommandText = "Page_Delete";
+                        cmdSql.CommandText = "spPage_Delete";
 
                         cmdSql.Parameters.Clear();
                         cmdSql.Parameters.AddWithValue("@PageName", PageName);
-                        cmdSql.Parameters.AddWithValue("@UpdateID", Session["Username"]);
+                        cmdSql.Parameters.AddWithValue("@UpdateID", Session["UserName"]);
 
-                        SqlParameter Error = cmdSql.Parameters.Add("@Error", SqlDbType.Bit);
-                        SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.NVarChar, 50);
+                        SqlParameter Error = cmdSql.Parameters.Add("@IsError", SqlDbType.Bit);
+                        SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.VarChar, 50);
 
                         Error.Direction = ParameterDirection.Output;
                         ErrorMessage.Direction = ParameterDirection.Output;

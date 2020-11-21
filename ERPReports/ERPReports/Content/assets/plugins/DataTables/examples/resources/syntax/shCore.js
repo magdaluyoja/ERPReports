@@ -1972,8 +1972,8 @@ typeof(exports) != 'undefined' ? exports.SyntaxHighlighter = SyntaxHighlighter :
                         'parse_ini_file parse_str parse_url passthru pathinfo print readlink realpath rewind rewinddir rmdir '+
                         'round str_ireplace str_pad str_repeat str_replace str_rot13 str_shuffle str_split '+
                         'str_word_count strcasecmp strchr strcmp strcoll strcspn strftime strip_tags stripcslashes '+
-                        'stripos stripslashes stristr strlen strnatcasecmp strnatcmp strncasecmp strncmp sbrk '+
-                        'sos stime strrchr strrev strripos strrpos strspn strstr strtok strtolower strtotime '+
+                        'stripos stripslashes stristr strlen strnatcasecmp strnatcmp strncasecmp strncmp strpbrk '+
+                        'strpos strptime strrchr strrev strripos strrpos strspn strstr strtok strtolower strtotime '+
                         'strtoupper strtr strval substr substr_compare';
 
         var keywords =  'abstract and array as break case catch cfunction class clone const continue declare default die do ' +

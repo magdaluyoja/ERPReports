@@ -1,13 +1,12 @@
-﻿using System;
-//using ERPReports.Areas.MasterMaintenance.Models;
-using System.Collections;
+﻿using System.Collections;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
+using System;
+using System.Data.SqlClient;
 namespace ERPReports.App_Start
 {
     public class AuthorizationFilter : AuthorizeAttribute, IAuthorizationFilter
@@ -48,20 +47,20 @@ namespace ERPReports.App_Start
                         using (SqlCommand cmdSql = conn.CreateCommand())
                         {
                             cmdSql.CommandType = CommandType.StoredProcedure;
-                            cmdSql.CommandText = "UserPageAccess_Validate";
+                            cmdSql.CommandText = "spUserPageAccess_Validate";
 
                             cmdSql.Parameters.Clear();
                             cmdSql.Parameters.AddWithValue("@UserID", userID);
                             cmdSql.Parameters.AddWithValue("@PURL", URL);
-                            SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.VarChar, 200);
-                            SqlParameter Error = cmdSql.Parameters.Add("@Error", SqlDbType.Bit);
-                            Error.Direction = ParameterDirection.Output;
+                            SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.VarChar, 50);
+                            SqlParameter IsError = cmdSql.Parameters.Add("@IsError", SqlDbType.Bit);
+                            IsError.Direction = ParameterDirection.Output;
                             ErrorMessage.Direction = ParameterDirection.Output;
 
                             cmdSql.ExecuteNonQuery();
 
-                            error = Convert.ToBoolean(Error.Value);
-                            if (error)
+                            error = Convert.ToBoolean(IsError.Value);
+                            if (error && URL != "/")
                             {
                                 //context.Response.StatusCode = 403;
                                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "Error403" }, { "controller", "Error" }, { "area", "" } });
@@ -85,8 +84,8 @@ namespace ERPReports.App_Start
                                             ParentOrder = Convert.ToInt32(sdr["ParentOrder"]),
                                             Order = Convert.ToInt32(sdr["Order"]),
                                             Icon = sdr["Icon"].ToString(),
-                                            ReadAndWrite = sdr["ReadAndWrite"].ToString(),
-                                            DeleteEnabled = sdr["DeleteEnabled"].ToString(),
+                                            ReadAndWrite = Convert.ToBoolean(sdr["ReadAndWrite"]),
+                                            DeleteEnabled = Convert.ToBoolean(sdr["DeleteEnabled"]),
                                         });
                                     }
                                 }

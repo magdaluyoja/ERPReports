@@ -1,4 +1,11 @@
-﻿; (function () {
+﻿/*****************************************
+A. Name: Format Data Class
+B. Date Created: Aug 09, 2020
+C. Author: Jay-R A. Magdaluyo
+D. Modification History:
+E. Synopsis: Class Module used to format data
+***********************************************/
+; (function () {
     const FormatterClass = function (dataToFormat) {
         return new FormatterClass.init(dataToFormat);
     }
@@ -130,7 +137,7 @@
     return window.FormatterClass = window.$F = FormatterClass;
 }());
 $(document).ready(function () {
-    $(".decimal-only, .money-only, .decimal").keypress(function (evt) {
+    $("body").on("keypress", ".decimal-only, .money-only, .decimal", function (evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
         if (charCode != 46 && charCode > 31
           && (charCode < 48 || charCode > 57))

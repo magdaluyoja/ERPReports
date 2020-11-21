@@ -1,12 +1,12 @@
-﻿using System;
+﻿using ERPReports.Areas.MasterMaintenance.Models;
+using ERPReports.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Mvc;
-using ERPReports.Areas.MasterMaintenance.Models;
-using ERPReports.Models;
 
 namespace ERPReports.Areas.MasterMaintenance.Controllers
 {
@@ -141,12 +141,12 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
                         using (SqlCommand cmdSql = conn.CreateCommand())
                         {
                             cmdSql.CommandType = CommandType.StoredProcedure;
-                            cmdSql.CommandText = "General_InsertUpdate";
+                            cmdSql.CommandText = "spGeneral_InsertUpdate";
                             cmdSql.Parameters.Clear();
                             cmdSql.Parameters.AddWithValue("@ID", General.ID);
                             cmdSql.Parameters.AddWithValue("@TypeID", General.TypeID);
                             cmdSql.Parameters.AddWithValue("@Value", General.Value);
-                            cmdSql.Parameters.AddWithValue("@CreateID", Session["Username"]);
+                            cmdSql.Parameters.AddWithValue("@CreateID", Session["UserName"]);
                             SqlParameter EndMsg = cmdSql.Parameters.Add("@EndMsg", SqlDbType.VarChar, 200);
                             SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.VarChar, 200);
                             SqlParameter Error = cmdSql.Parameters.Add("@Error", SqlDbType.Bit);
@@ -243,11 +243,11 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
                     using (SqlCommand cmdSql = conn.CreateCommand())
                     {
                         cmdSql.CommandType = CommandType.StoredProcedure;
-                        cmdSql.CommandText = "General_Delete";
+                        cmdSql.CommandText = "spGeneral_Delete";
 
                         cmdSql.Parameters.Clear();
                         cmdSql.Parameters.AddWithValue("@ID", ID);
-                        cmdSql.Parameters.AddWithValue("@UpdateID", Session["Username"]);
+                        cmdSql.Parameters.AddWithValue("@UpdateID", Session["UserName"]);
 
                         SqlParameter Error = cmdSql.Parameters.Add("@Error", SqlDbType.Bit);
                         SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.NVarChar, 50);
@@ -393,11 +393,11 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
                         using (SqlCommand cmdSql = conn.CreateCommand())
                         {
                             cmdSql.CommandType = CommandType.StoredProcedure;
-                            cmdSql.CommandText = "Type_InsertUpdate";
+                            cmdSql.CommandText = "spType_InsertUpdate";
                             cmdSql.Parameters.Clear();
                             cmdSql.Parameters.AddWithValue("@ID", TypeObj.ID);
                             cmdSql.Parameters.AddWithValue("@Type", TypeObj.Type);
-                            cmdSql.Parameters.AddWithValue("@CreateID", Session["Username"]);
+                            cmdSql.Parameters.AddWithValue("@CreateID", Session["UserName"]);
                             SqlParameter EndMsg = cmdSql.Parameters.Add("@EndMsg", SqlDbType.VarChar, 200);
                             SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.VarChar, 200);
                             SqlParameter Error = cmdSql.Parameters.Add("@Error", SqlDbType.Bit);
@@ -492,11 +492,11 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
                     using (SqlCommand cmdSql = conn.CreateCommand())
                     {
                         cmdSql.CommandType = CommandType.StoredProcedure;
-                        cmdSql.CommandText = "Type_Delete";
+                        cmdSql.CommandText = "spType_Delete";
 
                         cmdSql.Parameters.Clear();
                         cmdSql.Parameters.AddWithValue("@ID", ID);
-                        cmdSql.Parameters.AddWithValue("@UpdateID", Session["Username"]);
+                        cmdSql.Parameters.AddWithValue("@UpdateID", Session["UserName"]);
 
                         SqlParameter Error = cmdSql.Parameters.Add("@Error", SqlDbType.Bit);
                         SqlParameter ErrorMessage = cmdSql.Parameters.Add("@ErrorMessage", SqlDbType.NVarChar, 50);

@@ -1,9 +1,27 @@
 ﻿'use strict';
+/*****************************************
+A. Name: Menu Script
+B. Date Created: Nov 15, 2020
+C. Author: Jay-R A. Magdaluyo
+D. Modification History:
+E. Synopsis: Module for creating dynamic user menu and page's button access
+***********************************************/
 (function () {
     $(document).ready(function () {
         var menu = $("#hdnMenu").val();
         var currentlUrl = $("#hdnMenu").data("currurl");
         if ($("#hdnMenu").length) if (menu.replace(" ", "") != "") drawUserMenu(JSON.parse(menu));
+        var modules = $("#divModules").attr("data-modules");
+        var currentlUrl = $("#hdnMenu").data("currurl");
+        if (modules) {
+            //modules = modules.replace(" ", "");
+            modules = (JSON.parse(modules));
+            var elModules = "";
+            $.each(modules, function () {
+                elModules += "<button type='button' class='btn btn-success btn-block btnModules'>" + this.ModuleName + "</button>";
+            })
+            $("#divModules").html(elModules)
+        }
 
         function drawUserMenu(menu) {
             const tmpForParentMenu = menu;
@@ -43,10 +61,10 @@
                     if (currentlUrl == this.URL) {
                         activeMainMenuClass = "active";
 
-                        if (!this.HasSub && this.ReadAndWrite == "True") {
+                        if (!this.HasSub && this.ReadAndWrite) {
                             AccessType = 1;
                         }
-                        if (!this.HasSub && this.DeleteEnabled == "True") {
+                        if (!this.HasSub && this.DeleteEnabled) {
                             DeleteEnabled = 1;
                         }
                     } else {
@@ -76,10 +94,10 @@
                                     if (currentlUrl.search(this.URL) >= 0) {
                                         activeMainMenuLink = this.ParentMenu;
                                         activeSubMenuClass = "active";
-                                        if (this.ReadAndWrite == "True") {
+                                        if (this.ReadAndWrite) {
                                             AccessType = 1;
                                         }
-                                        if (this.DeleteEnabled == "True") {
+                                        if (this.DeleteEnabled) {
                                             DeleteEnabled = 1;
                                         }
                                     } else {
@@ -154,6 +172,25 @@
                     }
                 }, 100);
             });
+        }
+    });
+    $(document).on("click", ".btnModules", function () {
+        var Module = $(this).text();
+        $("#frmIDMLogin #Module").val(Module);
+        if (Module == "Inspection Data Management")
+            window.location.href = "/";
+        else
+            $('#frmIDMLogin').submit();
+    });
+    $(document).on("click", "#btnMainPage", function () {
+        $('#frmIDMLogin').submit();
+    });
+    $('#frmIDMLogin').on('submit', function (e) {
+        var hdnUserName = $("#hdnUserName").val().trim();
+        var hdnPassword = $("#hdnPassword").val().trim();
+        if (!(hdnUserName && hdnPassword)) { //Sample error check
+            e.preventDefault();
+            alert("UserName and Password not found. Please contact System Support.");
         }
     });
 })();

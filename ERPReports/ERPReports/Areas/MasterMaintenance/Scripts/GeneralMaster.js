@@ -1,4 +1,11 @@
 ﻿"use strict";
+/*****************************************
+A. Name: General Master
+B. Date Created: Aug 09, 2020
+C. Author: Jay-R A. Magdaluyo
+D. Modification History:
+E. Synopsis: Module used to manage General Data List
+***********************************************/
 (function () {
     var General = $D();
     var CUI2 = $UI();
@@ -71,17 +78,21 @@
                     deleteType();
             });
         });
+        $('#btnPrint').on('click', function (e) {
+            tblGeneral.ajax.reload(null, false);
+            window.location = "/MasterMaintenance/GeneralMaster/DownloadGeneral";
+        });
         //#Special Events
         tblGeneral.on('draw.dt', function () {
             CUI.dataTableID = "#tblGeneral";
-            CUI.setDatatableMaxHeight();
+            CUI.setDatatableMaxHeightFixed();
         });
         tblType.on('draw.dt', function () {
             CUI2.dataTableID = "#tblType";
             CUI2.setDatatableMaxHeight();
         });
         $.listen('parsley:field:error', function (fieldInstance) {//Parsley Validation Error Event Listener
-            setTimeout(function () { CUI.setDatatableMaxHeight(); }, 500);
+            setTimeout(function () { CUI.setDatatableMaxHeightFixed(); }, 500);
         });
 
         //Library Inits
@@ -95,7 +106,7 @@
                             id: 'ID',
                             text: 'Type',
                             table: 'mTypes',
-                            db: 'TRP_PriceManagement',
+                            db: 'ERPReports',
                             condition: '',
                             display: 'id&text',
                             orderBy: ' ORDER BY Type '
@@ -129,6 +140,7 @@
                     },
 
                     dataSrc: "data",
+                    scrollY: '55vh',scrollX: '100vw',
                     columns: [
                         { title: "Type", data: "TypeDesc" },
                         { title: "Value", data: "Value" },
@@ -151,6 +163,7 @@
                     },
 
                     dataSrc: "data",
+                    scrollY: '55vh',scrollX: '100vw',
                     select: true,
                     columns: [
                         { title: "Type", data: "Type" },

@@ -19,15 +19,6 @@
     overflow-x: hidden !important;
 }
 
-.input-error {
-    border-color: #cc4946 !important;
-}
-
-    .input-error:focus {
-        border-color: #cc4946 !important;
-        box-shadow: 0 0 0 .125rem rgba(204,73,70,.3) !important;
-    }
-
 #loading_modal * {
     background: transparent !important;
     box-shadow: none;
@@ -76,6 +67,14 @@
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
+}
+
+.modal-dialog.tbl-100p {
+    width: CALC(100% - 30px) !important;
+    min-width: CALC(100% - 30px) !important;
+    max-width: CALC(100% - 30px) !important;
+    margin-left: 15px !important;
+    margin-right: 15px !important;
 }
 
 .mdl-full {
@@ -127,6 +126,7 @@
     height: unset !important;
 }*/
 
+.table th, .table td,
 .tbl-no-wrap th, .tbl-no-wrap td {
     white-space: nowrap !important;
 }
@@ -241,6 +241,7 @@ table.tbl-with-btns > thead > tr > th {
 }
 
 .input-error,
+.input-error + .custom-file-label,
 .input-error + .select2-container > .selection > .select2-selection.select2-selection--single,
 .input-error + .select2-container > .selection > .select2-selection.select2-selection--multiple {
     border: 1px solid #bf8887 !important;
@@ -510,23 +511,23 @@ table.tbl-with-btns > thead > tr > th {
         top: 0px;
     }
 
-#trSearch th {
+#trSearch th, .trSearch th {
     padding: 0px !important;
     /*padding-bottom: 2px !important;*/
     text-align: center;
     background: #fff !important;
 }
 
-    #trSearch th select {
+    #trSearch th select, .trSearch th select {
         padding: 2px 0px !important;
         height: 25px;
     }
 
-    #trSearch th .select2-container--default .select2-selection--single {
+    #trSearch th .select2-container--default .select2-selection--single, .trSearch th .select2-container--default .select2-selection--single {
         border-radius: 0 !important;
     }
 
-        #trSearch th .select2-container--default .select2-selection--single .select2-selection__arrow {
+        #trSearch th .select2-container--default .select2-selection--single .select2-selection__arrow, .trSearch th .select2-container--default .select2-selection--single .select2-selection__arrow {
             width: 17px !important;
         }
 
@@ -557,6 +558,14 @@ li.has-sub, .li-menu {
 
 td.td-f-con .select2-container {
     display: inline !important;
+}
+
+td.td-f-con .form-control:not([readonly]), td .select2-selection__rendered {
+    background: #c8e4ff !important;
+}
+
+.view-mode td.td-f-con .form-control, .view-mode td .select2-selection__rendered {
+    background: #ffffff !important;
 }
 
 td.td-f-con .select2-container--default .select2-selection--single {
@@ -605,12 +614,9 @@ table.dataTable td.sorting_1 {
     margin-right: 0px !important;
 }
 
-.tbl-check .checkbox.checkbox-css label:before, .tbl-check .checkbox.checkbox-css input:checked + label:after {
-    top: -4px !important;
-}
-
 .leftBorder, .table thead th.leftBorder {
     border-left: 2px solid black !important;
+    padding-left: 10px !important;
 }
 
 .supplierCol {
@@ -685,4 +691,175 @@ tr.bg-danger {
 
 tr.bg-green, tr.bg-success {
     background-color: #a6f7b9 !important;
+}
+
+.b-r-0 {
+    border-radius: 0px !important;
+}
+
+.modal-open {
+    overflow-y: auto !important;
+}
+
+
+.tbl-check .checkbox.checkbox-css label:before, .tbl-check .checkbox.checkbox-css input:checked + label:after {
+    top: -4px !important;
+}
+
+.tbl-check-lg .checkbox.checkbox-css label:before, .tbl-check-lg .checkbox.checkbox-css input:checked + label:after {
+    top: 3px !important;
+}
+
+.tbl-check-lg .tdchk {
+    padding-left: 10px !important;
+}
+
+
+.input-error, td.td-f-con .form-control.input-error {
+    border: 1px solid !important;
+    border-color: #cc4946 !important;
+}
+
+    .input-error:focus, td.td-f-con .form-control.input-error:focus {
+        border-color: #cc4946 !important;
+        box-shadow: 0 0 0 .125rem rgba(204,73,70,.3) !important;
+    }
+
+tr.error td .form-control, td.td-f-con .form-control.input-error, td.error {
+    background-color: indianred !important;
+    color: #fff !important;
+}
+
+fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.custom-file, .custom-file-input {
+    height: 30px;
+}
+
+.custom-file-label {
+    height: 30px;
+    padding: .36rem .75rem;
+    line-height: 1.4;
+}
+
+    .custom-file-label::after {
+        height: 28px;
+        padding: .375rem .75rem;
+        line-height: 1.4;
+    }
+
+.table > thead > tr > th {
+    white-space: nowrap !important;
+}
+
+.table > tfoot > tr > th, .table thead tr:nth-child(2) th {
+    padding: 0;
+}
+
+thead .form-control, tfoot .form-control {
+    width: 100% !important;
+    border-radius: 0 !important;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    white-space: initial !important;
+}
+
+div.form-control .radio.radio-css {
+    padding-top: 0 !important;
+}
+
+    div.form-control .radio.radio-css label:before {
+        top: 0 !important;
+    }
+
+    div.form-control .radio.radio-css input:checked + label:after {
+        top: 5px !important;
+    }
+
+label {
+    margin-bottom: 0;
+}
+
+th.td-f-con, td.td-f-con {
+    padding: 0px 0px !important;
+    min-height: 30px !important;
+}
+
+    td.td-f-con .form-control {
+        border-radius: 0px !important;
+        border: 0 !important;
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+
+        td.td-f-con .form-control.decimal {
+            border-radius: 0px !important;
+            border: 0 !important;
+            padding-left: 2px !important;
+            padding-right: 14px !important;
+        }
+
+.form-control-with-bg .form-control,
+.form-control.form-control-with-bg {
+    background: #f8f9fab3;
+}
+
+td.td-f-con .form-control {
+    height: 30px !important;
+}
+
+.td-f-con .btn.btn-sm {
+    padding: 6px 10px !important;
+}
+
+td .form-control {
+    width: 100% !important;
+}
+
+.spnInput.form-control[readonly] {
+    background: transparent !important;
+}
+
+.modal-footer .btn {
+    min-width: 100px !important;
+}
+
+.custom-file-label {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .fixed-tblcontainer {
+        box-shadow: inset 0 7px 9px -7px rgba(0,0,0,0.7);
+        overflow: auto;
+        max-height: calc(100vh - 222px) !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .modal-dialog.modal-lg {
+        max-width: 700px;
+        margin: 10px auto;
+    }
 }

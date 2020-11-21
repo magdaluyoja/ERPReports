@@ -1,4 +1,11 @@
-﻿;
+﻿/*****************************************
+A. Name: Message Class
+B. Date Created: Aug 09, 2020
+C. Author: Jay-R A. Magdaluyo
+D. Modification History:
+E. Synopsis: Class Module used for showing messages
+***********************************************/
+;
 (function (global, $) {
     const Message = function (msgType, msgTitle, msg, func, trxId) {
         return new Message.init(msgType, msgTitle, msg, func, trxId);
@@ -10,6 +17,7 @@
         this.trxId = trxId || "";
         this.func = func || "";
 
+        this.msgTimer = 5000;
         this.msgToastrType = {
             "info": "fa fa-info-circle",
             "warning": "fas fa-lg fa-fw m-r-10 fa-exclamation-triangle",
@@ -47,7 +55,23 @@
                 backgroundColor: '',
                 theme: 'light', // dark
                 color: this.txtColor[this.msgType], // blue, red, green, yellow
-                timeout: 5000,
+                timeout: this.msgTimer,
+            });
+            return this;
+        },
+        showToastrMsgNoClose: function () {
+            if (this.msgType === "error") {
+                this.getError();
+            }
+            iziToast.show({
+                title: this.msgTitle,
+                message: this.msg,
+                icon: this.msgToastrType[this.msgType],
+                position: 'topRight',
+                backgroundColor: '',
+                theme: 'light', // dark
+                color: this.txtColor[this.msgType], // blue, red, green, yellow
+                timeout: 0,
             });
             return this;
         },
@@ -62,6 +86,12 @@
             this.msgTitle = "Error!";
             this.msg = msg;
             this.showToastrMsg();
+        },
+        showErrorNoClose: function (msg) {
+            this.msgType = "error";
+            this.msgTitle = "Error!";
+            this.msg = msg;
+            this.showToastrMsgNoClose();
         },
         showSuccess: function (msg) {
             this.msgType = "success";
@@ -97,8 +127,8 @@
 
                         }],
                         ['<button><b>NO</b></button>', function (instance, toast) {
-
                             instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            resolve(false);
                         }, true],
                     ],
                 });
@@ -134,7 +164,22 @@
                 });
             });
             return promiseObj;
-        }
+        },
+        showSessionError: function (response) {
+            $("#iziModalError").iziModal({
+                title: "Attention",
+                subtitle: response.errors,
+                icon: 'icon-power_settings_new',
+                headerColor: '#BD5B5B',
+                width: 600,
+                timeout: 0,
+                timeoutProgressbar: true,
+                transitionIn: 'fadeInDown',
+                transitionOut: 'fadeOutDown',
+                pauseOnHover: true
+            });
+            $('#iziModalError').iziModal('open');
+        },
     }
     Message.init.prototype = Message.prototype;
     return global.Message = global.$M = Message;

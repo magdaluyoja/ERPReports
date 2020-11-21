@@ -16069,12 +16069,12 @@ var widgetsSortable = $.widget( "ui.sortable", $.ui.mouse, {
 							._removeClass( element, "ui-sortable-helper" );
 
 					if ( nodeName === "tbody" ) {
-						that._createlaceholder(
+						that._createTrPlaceholder(
 							that.currentItem.find( "tr" ).eq( 0 ),
 							$( "<tr>", that.document[ 0 ] ).appendTo( element )
 						);
 					} else if ( nodeName === "tr" ) {
-						that._createlaceholder( that.currentItem, element );
+						that._createTrPlaceholder( that.currentItem, element );
 					} else if ( nodeName === "img" ) {
 						element.attr( "src", that.currentItem.attr( "src" ) );
 					}
@@ -16124,7 +16124,7 @@ var widgetsSortable = $.widget( "ui.sortable", $.ui.mouse, {
 
 	},
 
-	_createlaceholder: function( sourceTr, targetTr ) {
+	_createTrPlaceholder: function( sourceTr, targetTr ) {
 		var that = this;
 
 		sourceTr.children().each( function() {

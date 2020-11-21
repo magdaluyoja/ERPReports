@@ -49,6 +49,15 @@ namespace ERPReports.Models
             }
             return table;
         }
+        public DataTable UpdateDates(DataTable table)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                row["CreateDate"] = DateTime.Now;
+                row["UpdateDate"] = DateTime.Now;
+            }
+            return table;
+        }
         public DataTable UpdateCreateCols(DataTable table, string CreateID, String UpdateID)
         {
             foreach (DataRow row in table.Rows)

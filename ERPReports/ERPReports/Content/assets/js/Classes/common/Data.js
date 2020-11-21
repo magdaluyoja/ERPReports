@@ -1,4 +1,11 @@
-﻿; (function () {
+﻿/*****************************************
+A. Name: Custom Data Class
+B. Date Created: Aug 09, 2020
+C. Author: Jay-R A. Magdaluyo
+D. Modification History:
+E. Synopsis: Class Module used to process data
+***********************************************/
+; (function () {
     const DataClass = function (formData, formAction) {
         return new DataClass.init(formData, formAction);
     }
@@ -223,28 +230,6 @@
                     beforeSend: function () {
                         $('#loading_modal').modal("show");
                     },
-                    xhr: function () {
-                        var xhr = new window.XMLHttpRequest();
-                        // Handle progress
-                        //Upload progress
-                        xhr.upload.addEventListener("progress", function (evt) {
-                            if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                //Do something with upload progress
-                                console.log(percentComplete);
-                            }
-                        }, false);
-                        //Download progress
-                        xhr.addEventListener("progress", function (evt) {
-                            if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                //Do something with download progress
-                                console.log(percentComplete);
-                            }
-                        }, false);
-
-                        return xhr;
-                    },
                     success: function (response) {
                         $('#loading_modal').modal('hide');
                         if (response.success) {
@@ -268,6 +253,7 @@
                                 }
                                 self.showToastrMsg();
                             }
+                            resolve(false);
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -347,21 +333,6 @@
                 $('#' + form).parsley().validate();
             }
         },
-        showSessionError: function (response) {
-            $("#iziModalError").iziModal({
-                title: "Attention",
-                subtitle: response.errors,
-                icon: 'icon-power_settings_new',
-                headerColor: '#BD5B5B',
-                width: 600,
-                timeout: 0,
-                timeoutProgressbar: true,
-                transitionIn: 'fadeInDown',
-                transitionOut: 'fadeOutDown',
-                pauseOnHover: true
-            });
-            $('#iziModalError').iziModal('open');
-        },
         getArrayValFromObjectArray: function (tblData, prop) {
             var arrVal = [];
             var selectedRowCount = tblData.length;
@@ -372,7 +343,7 @@
             }
             return arrVal;
         },
-        readURL(input) {
+        readURL: function (input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 var previewid = input.getAttribute('data-previewid');
@@ -382,7 +353,7 @@
 
                 reader.readAsDataURL(input.files[0]);
             }
-        }
+        },
     }
     DataClass.init.prototype = $.extend(DataClass.prototype, $M.init.prototype);
 

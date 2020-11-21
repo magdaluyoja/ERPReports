@@ -7,12 +7,9 @@
     <meta charset="utf-8" />
     <title>Login | ERP Reports</title>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-
-
     @Styles.Render("~/Login-CSS")
-
-    <link href="/Content/assets/css/default/theme/default.css" rel="stylesheet" id="theme" />
-    
+    <link href="/Content/assets/css/default/theme/blue.css" rel="stylesheet" id="theme" />
+    <link rel="icon" href="~/Content/assets/img/ERPReports.ico" type="image/x-icon">
     <style>
         .theme-panel.theme-panel-lg .theme-collapse-btn {
             top: 15px;
@@ -28,7 +25,7 @@
         }
     </style>
 </head>
-<body class="pace-top bg-white">
+<body class="pace-top bg-white" onLoad="noBack();" onpageshow="if (event.persisted) noBack();" onUnload="">
     <div id="page-loader" class="fade show"><span class="spinner"></span></div>
     <div id="loading_modal" class="modal loading_modal" data-backdrop="static">
         <div class="modal-dialog modal-sm">
@@ -46,31 +43,14 @@
     <div id="page-container" class="fade">
         <div class="login login-with-news-feed">
             <div class="news-feed">
-                <div class="news-image" style="background-image: url(/Content/assets/img/login-bg/login-bg-11.jpg)">
-                    <div class="container" style="padding:60px;">
-                        @*<h1 class="text-white m-b-20">OUR MISSION</h1>
-                            <h2 class="text-white">
-                                To keep an accurate and effective supply chain.
-                            </h2>
-                            <h2 class="text-white">
-                                To assure accurate and competitive purchase cost.
-                            </h2>
-                            <h4 class="text-white">
-                                -  Purchasing Department
-                            </h4>*@
-                    </div>
+                <div class="news-image" style="background: #afc6da;">
                 </div>
                 <div class="news-caption">
-                    @*<h4 class="caption-title"><b>ERP </b> Reports</h4>
-                    <p>
-                        &copy; ERP Reports
-                    </p>*@
                 </div>
             </div>
             <div class="right-content">
                 <div class="login-header">
                     <div class="brand text-center">
-
                         <span class="logo"></span><br />
                         <b>ERP Reports</b>
                     </div>
@@ -82,24 +62,18 @@
                     <form id="frmLogin" class="margin-bottom-0" data-parsley-validate>
                         @Html.AntiForgeryToken()
                         <div class="form-group m-b-15">
-                            <input type="text" id="Username" name="Username" class="form-control form-control-lg" placeholder="Username" required data-parsley-error-message="Please enter your Username." autocomplete="off" />
+                            <input type="text" id="UserName" name="UserName" class="form-control form-control-lg" placeholder="UserName" required data-parsley-error-message="Please enter your UserName." autocomplete="off" />
                         </div>
                         <div class="form-group m-b-15">
                             <input type="password" id="Password" name="Password" class="form-control form-control-lg" placeholder="Password" required data-parsley-error-message="Please enter your Password." autocomplete="off" />
                         </div>
-                        @*<div class="checkbox checkbox-css m-b-30">
-                                <input type="checkbox" id="remember_me_checkbox" value="" />
-                                <label for="remember_me_checkbox">
-                                    Remember Me
-                                </label>
-                            </div>*@
                         <br />
                         <div class="login-buttons">
                             <button type="submit" class="btn btn-success btn-block btn-lg">Sign me in</button>
                         </div>
                         <hr />
                         <p class="text-center text-grey-darker">
-                            &copy;  - ERP Reports 2019
+                            &copy; ERP Reports 2020
                         </p>
                     </form>
                 </div>
@@ -190,7 +164,6 @@
             </div>
         </div>
     </div>
-
     @Scripts.Render("~/Login-JS")
     <!--[if lt IE 9]>
         <script src="/Content/assets/crossbrowserjs/html5shiv.js"></script>

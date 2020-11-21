@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace ERPReports
 {
@@ -104,17 +103,20 @@ namespace ERPReports
                         "~/Areas/MasterMaintenance/Scripts/UserMaster.js"
                     )
             );
-
             bundles.Add(new StyleBundle("~/PageMaster-CSS")
                     .Include(LayoutCSS)
                     .Include(DataTblCSS)
                     .Include(TrxCSS)
+                    .Include(
+                        "~/Content/assets/plugins/DataTables/extensions/Select/css/select.bootstrap.min.css"
+                    )
             );
             bundles.Add(new ScriptBundle("~/PageMaster-Js")
                     .Include(LayoutJS)
                     .Include(DataTblJS)
                     .Include(TrxJS)
                     .Include(
+                        "~/Content/assets/plugins/DataTables/extensions/Select/js/dataTables.select.min.js",
                         "~/Areas/MasterMaintenance/Scripts/PageMaster.js"
                     )
             );

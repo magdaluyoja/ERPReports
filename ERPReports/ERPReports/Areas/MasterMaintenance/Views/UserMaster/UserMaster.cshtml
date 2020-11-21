@@ -26,26 +26,26 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-8 col-lg-7">
+            <div class="col-lg-8">
                 <div class="row">
-                    <div class="col-sm-3 m-b-5 ReadAndWrite">
-                        <button type="button" id="btnAddUser" class="btn btn-sm btn-primary btn-block "><span class="fa fa-plus"></span><span class="btnLabel"> Add</span></button>
+                    <div class="col-md-3 m-b-5 ReadAndWrite">
+                        <button type="button" id="btnAddUser" class="btn btn-sm btn-primary btn-block"><span class="fa fa-plus"></span><span class="btnLabel"> Add</span></button>
                     </div>
-                    <div class="col-sm-3 m-b-5 ReadAndWrite">
+                    <div class="col-md-3 m-b-5 ReadAndWrite">
                         <button type="button" id="btnEditUser" class="btn btn-sm btn-info btn-block tbl-tr-btns" disabled><span class="fa fa-edit"></span><span class="btnLabel"> Edit</span></button>
                     </div>
-                    <div class="col-sm-3 m-b-5 DeleteEnabled">
+                    <div class="col-md-3 m-b-5 DeleteEnabled">
                         <button type="button" id="btnDeleteUser" class="btn btn-sm btn-danger btn-block tbl-tr-btns" disabled><span class="fa fa-trash-alt"></span><span class="btnLabel"> Delete</span></button>
                     </div>
-                    <div class="col-sm-3 m-b-5">
-                        <button type="button" id="btnUserAccess" class="btn btn-sm btn-success btn-block tbl-tr-btns tbl-tr-btns" disabled><span class="fa fa-list"></span><span class="btnLabel"> Access</span></button>
+                    <div class="col-md-3 m-b-5">
+                        <button type="button" id="btnUserAccess" class="btn btn-sm btn-success btn-block tbl-tr-btns" disabled><span class="fa fa-list"></span><span class="btnLabel"> Access</span></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="hljs-wrapper">
-        <table id="tblUser" class="table zebraStyle  table-bordered tbl-100p" data-adjust="-30"></table>
+        <table id="tblUser" class="table zebraStyle  table-bordered tbl-100p tbl-no-wrap"></table>
     </div>
 </div>
 <div class="modal fade " id="mdlUserAccess" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -71,34 +71,35 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="mdlUserTitle"> Create User</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close btnCancelUser" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form data-parsley-validate id="frmUser">
                 <div class="modal-body">
                     <div class="row ">
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <div class="input-group input-group-sm m-b-5">
                                 <div class="input-group-prepend">
-                                    <label class="input-group-text" style="width:101px;" for="Username">Username <span class="text-danger">*</span></label>
+                                    <label class="input-group-text" style="width:101px;" for="UserName">UserName </label>
                                 </div>
-                                <input type="text" id="Username" name="Username" class="form-control input" data-parsley-required data-parsley-maxlength="20" data-parsley-errors-container="#err-Username" autocomplete="off">
+                                <input type="text" id="UserName" name="UserName"  class="form-control input" data-parsley-errors-container="#err-UserName" autocomplete="off">
                             </div>
-                            <div id="err-Username"></div>
+                            <div id="err-UserName"></div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <div class="input-group input-group-sm m-b-5">
                                 <div class="input-group-prepend">
-                                    <label class="input-group-text" style="width:101px;" for="Email">Email <span class="text-danger">*</span></label>
+                                    <label class="input-group-text" style="width:101px;" for="Password">Password <span class="text-danger">*</span></label>
                                 </div>
-                                <input type="text" id="Email" name="Email" class="form-control input" data-parsley-type="email" data-parsley-required data-parsley-maxlength="255" data-parsley-errors-container="#err-Email" autocomplete="off">
+                                <input type="text" id="Password" name="Password" class="form-control input" required data-parsley-minlength="8" data-parsley-maxlength="255" data-parsley-errors-container="#err-Password" autocomplete="off">
+                                <span class="input-group-append clickable" id="btnGeneratePassword"><span class="input-group-text"><span class="fa fa-random"></span></span></span>
                             </div>
-                            <div id="err-Email"></div>
+                            <div id="err-Password"></div>
                         </div>
                     </div>
                     <div class="row ">
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <div class="input-group input-group-sm m-b-5">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" style="width:101px;" for="FirstName">First Name <span class="text-danger">*</span></label>
@@ -107,7 +108,18 @@
                             </div>
                             <div id="err-FirstName"></div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:101px;" for="MiddleName">Middle Name </label>
+                                </div>
+                                <input type="text" id="MiddleName" name="MiddleName" class="form-control input" data-parsley-maxlength="255" data-parsley-errors-container="#err-MiddleName" autocomplete="off">
+                            </div>
+                            <div id="err-MiddleName"></div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-6">
                             <div class="input-group input-group-sm m-b-5">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" style="width:101px;" for="LastName">Last Name <span class="text-danger">*</span></label>
@@ -116,78 +128,21 @@
                             </div>
                             <div id="err-LastName"></div>
                         </div>
-                    </div>
-                    <div class="row ">
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <div class="input-group input-group-sm m-b-5">
                                 <div class="input-group-prepend">
-                                    <label class="input-group-text" style="width:101px;" for="Password">Password <span class="text-danger">*</span></label>
+                                    <label class="input-group-text" style="width:101px;" for="EmailAddress">Email Address <span class="text-danger">*</span></label>
                                 </div>
-                                <input type="text" id="Password" name="Password" class="form-control input" required data-parsley-maxlength="255" data-parsley-errors-container="#err-Password" autocomplete="off">
-                                <span class="input-group-append clickable" id="btnGeneratePassword"><span class="input-group-text"><span class="fa fa-random"></span></span></span>
+                                <input type="text" id="EmailAddress" name="EmailAddress" class="form-control input" data-parsley-type="email" data-parsley-required data-parsley-maxlength="255" data-parsley-errors-container="#err-EmailAddress" autocomplete="off">
                             </div>
-                            <div id="err-Password"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="input-group input-group-sm m-b-5">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" style="width:101px;" for="Department">Department <span class="text-danger">*</span></label>
-                                </div>
-                                @*<input type="text" id="Department" name="Department" class="form-control input" required data-parsley-maxlength="255" data-parsley-errors-container="#err-Department" autocomplete="off">*@
-                                <select id="Department" name="Department" class="form-control input" required data-parsley-errors-container="#err-Department"></select>
-                            </div>
-                            <div id="err-Department"></div>
+                            <div id="err-EmailAddress"></div>
                         </div>
                     </div>
-                    <div class="row ">
-                        <div class="col-sm-6">
-                            <div class="input-group input-group-sm m-b-5">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" style="width:101px;" for="PostFunction_Approver">Post/Approval <span class="text-danger">*</span></label>
-                                </div>
-                                <select id="PostFunction_Approver" name="PostFunction_Approver" class="form-control input" required data-parsley-errors-container="#err-PostFunction_Approver" autocomplete="off">
-                                    <option value="">--Please Select--</option>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                            <div id="err-PostFunction_Approver"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="input-group input-group-sm m-b-5">
-                                <div class="input-group-prepend">
-                                    <label class="input-group-text" style="width:101px;" for="Role">Role <span class="text-danger">*</span></label>
-                                </div>
-                                <select id="Role" name="Role" class="form-control input" required data-parsley-errors-container="#err-Role" autocomplete="off">
-                                    <option value="">--Please Select--</option>
-                                    <option value="Administrator">Administrator</option>
-                                    <option value="Encoder">Encoder</option>
-                                    <option value="Viewer">Viewer</option>
-                                </select>
-                                @*<div class="input-group-append" id="Custom" style="display:none;">
-                                        <div class="input-group-text">
-                                            <span class="fa fa-check"></span> Custom
-                                        </div>
-                                    </div>*@
-                            </div>
-                            <div id="err-Role"></div>
-                        </div>
-                    </div>
-                    <div id="divCostCenter">
-                        <div class="input-group input-group-sm m-b-5 origCostCenterSelect">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" style="width:101px;" for="CostCenter1">Cost Center <span class="text-danger">*</span></label>
-                            </div>
-                            <select id="CostCenter1" name="CostCenter1" class="form-control input CostCenters" required data-parsley-errors-container="#err-CostCenter1" autocomplete="off"></select>
-                        </div>
-                        <div id="err-CostCenter1"></div>
-                    </div>
-                    <button type="button" id="btnAddCostCenter" class="btn btn-sm btn-success"><span class="fa fa-plus"></span> Add</button>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="ID" id="UserID" class="input" value="0" />
                     <button type="submit" class="btn btn-sm btn-primary ReadAndWrite" id="btnSaveUser"> <span class="fa fa-save"></span> <span class="btnLabel"> Save</span></button>
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal" id="btnCancelUser"><span class="fa fa-times"></span> Close</button>
+                    <button type="button" class="btn btn-sm btn-secondary btnCancelUser" data-dismiss="modal"><span class="fa fa-times"></span> Close</button>
                 </div>
             </form>
         </div>
