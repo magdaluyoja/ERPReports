@@ -115,7 +115,7 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
             bool isValid = true;
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Sql_ERPReports"].ConnectionString.ToString()))
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ConnectionString.ToString()))
                 {
                     conn.Open();
                     using (SqlCommand cmdSql = conn.CreateCommand())
@@ -155,7 +155,7 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
             {
                 try
                 {
-                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Sql_ERPReports"].ToString()))
+                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ToString()))
                     {
                         conn.Open();
                         using (SqlCommand cmdSql = conn.CreateCommand())
@@ -230,7 +230,7 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
             mPage pageDetails = new mPage();
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Sql_ERPReports"].ConnectionString.ToString()))
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ConnectionString.ToString()))
                 {
                     conn.Open();
                     using (SqlCommand cmdSql = conn.CreateCommand())
@@ -274,7 +274,7 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["Sql_ERPReports"].ConnectionString.ToString()))
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ERPReports"].ConnectionString.ToString()))
                 {
                     conn.Open();
                     using (SqlCommand cmdSql = conn.CreateCommand())

@@ -160,6 +160,24 @@ namespace ERPReports
                         "~/Areas/Reports/Scripts/LSPDirectMaterial.js"
                     )
             );
+            bundles.Add(new StyleBundle("~/ProductivityIndexReport-CSS")
+                    .Include(LayoutCSS)
+                    .Include(DataTblCSS)
+                    .Include(TrxCSS)
+                    .Include(
+                        "~/Content/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css",
+                        "~/Content/assets/plugins/select2/dist/css/select2.css")
+                    );
+            bundles.Add(new ScriptBundle("~/ProductivityIndexReport-Js")
+                    .Include(LayoutJS)
+                    .Include(DataTblJS)
+                    .Include(TrxJS)
+                    .Include(
+                        "~/Content/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js",
+                        "~/Content/assets/plugins/select2/dist/js/select2.full.js",
+                        "~/Areas/Reports/Scripts/ProductivityIndexReport.js"
+                    )
+            );
         }
     }
 }
