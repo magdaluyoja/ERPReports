@@ -61,11 +61,51 @@ namespace ERPReports.Areas.Reports.Controllers
                     }
                     conn.Close();
                 }
+
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["LSPI803_App"].ConnectionString.ToString()))
+                {
+                    conn.Open();
+                    using (SqlCommand cmdSql = conn.CreateCommand())
+                    {
+
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "LSP_Rpt_ProductivityIndex_DetailedSp";
+                        cmdSql.Parameters.Clear();
+                        cmdSql.Parameters.AddWithValue("@MonthYear", MonthYear);
+                        cmdSql.ExecuteNonQuery();
+                        using (SqlDataReader sdr = cmdSql.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                DetailedSheetData.Add(new ExcelColumns
+                                {
+                                    A = sdr["wc"].ToString(),
+                                    B = sdr["oper_num"].ToString(),
+                                    C = sdr["item"].ToString(),
+                                    E = sdr["wc_desc"].ToString(),
+                                    G = sdr["qty_complete"].ToString(),
+                                    I = sdr["labor_min_per_pc"].ToString(),
+                                    J = sdr["std_labor_min"].ToString(),
+                                    K = sdr["WorkCenterClassification"].ToString(),
+                                });
+                            }
+
+                        }
+                    }
+                    conn.Close();
+                }
+
+                var groupedWorkCenterClassification = DetailedSheetData
+                    .GroupBy(u => u.K)
+                    .Select(grp => grp.ToList())
+                    .ToList();
+
                 string filePath = "";
                 filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "ProductivityIndexReport.xlsx");
                 FileInfo file = new FileInfo(filePath);
                 using (ExcelPackage excelPackage = new ExcelPackage(file))
                 {
+                    #region Summary(Sheet1)
                     ExcelWorksheet SummaryWorkSheet = excelPackage.Workbook.Worksheets["Summary"];
                     int rowCountTotal = SummarySheetData.Count + 8;
                     int SummaryCounter = 0;
@@ -126,7 +166,91 @@ namespace ERPReports.Areas.Reports.Controllers
                     SummaryWorkSheet.Cells[rowCountTotal + 1, 7].Value = actl_labor_min_2ndTOTAL;
                     SummaryWorkSheet.Cells[rowCountTotal + 1, 10].Value = std_labor_min_allTOTAL;
                     SummaryWorkSheet.Cells[rowCountTotal + 1, 11].Value = actl_labor_min_allTOTAL;
+                    #endregion
 
+                    #region Detailed(Sheet2)
+                    ExcelWorksheet DetailedWorkSheet = excelPackage.Workbook.Worksheets["Detailed"];
+                    DetailedWorkSheet.Cells[3, 4].Value = "Run Date: " + GenerationDate;
+                    int rowCountTotalDetails = DetailedSheetData.Count + 7;
+                    int sheetrRow = 7;
+                    int groupedWorkCenterClassificationCounter = 0;
+                    foreach (var DetailedSheetList in groupedWorkCenterClassification)
+                    {
+                        //foreach (ExcelColumns DetailedList in DetailedSheetList)
+                        //{
+                        decimal QTY_Total = 0;
+                        decimal Labor_Total = 0;
+                        decimal TotalProduces_Total = 0;
+                        int ClassificationHeaderRow = sheetrRow - 2;
+                        for (int DetailsCounter = 0; DetailsCounter < DetailedSheetList.Count; DetailsCounter++)
+                        {
+                            DetailedWorkSheet.Cells[(ClassificationHeaderRow), 1].Value = DetailedSheetList[DetailsCounter].K;
+
+                            DetailedWorkSheet.Cells[sheetrRow, 1].Value = DetailedSheetList[DetailsCounter].A;
+                            DetailedWorkSheet.Cells[sheetrRow, 1].Style.WrapText = false;
+                            DetailedWorkSheet.Cells[sheetrRow, 2].Value = DetailedSheetList[DetailsCounter].B;
+                            DetailedWorkSheet.Cells[sheetrRow, 2].Style.WrapText = false;
+                            DetailedWorkSheet.Cells[sheetrRow, 3].Value = DetailedSheetList[DetailsCounter].C;
+                            DetailedWorkSheet.Cells[sheetrRow, 3].Style.WrapText = false;
+                            DetailedWorkSheet.Cells[sheetrRow, 5].Value = DetailedSheetList[DetailsCounter].E;
+                            DetailedWorkSheet.Cells[sheetrRow, 5].Style.WrapText = false;
+                            DetailedWorkSheet.Cells[sheetrRow, 7].Value = DetailedSheetList[DetailsCounter].G;
+                            DetailedWorkSheet.Cells[sheetrRow, 7].Style.WrapText = false;
+                            DetailedWorkSheet.Cells[sheetrRow, 9].Value = DetailedSheetList[DetailsCounter].I;
+                            DetailedWorkSheet.Cells[sheetrRow, 9].Style.WrapText = false;
+                            DetailedWorkSheet.Cells[sheetrRow, 10].Value = DetailedSheetList[DetailsCounter].J;
+                            DetailedWorkSheet.Cells[sheetrRow, 10].Style.WrapText = false;
+                            DetailedWorkSheet.Cells[sheetrRow, 11].Value = DetailedSheetList[DetailsCounter].K;
+                            DetailedWorkSheet.Cells[sheetrRow, 11].Style.WrapText = false;
+
+                            QTY_Total = QTY_Total + Convert.ToDecimal(DetailedSheetList[DetailsCounter].G);
+                            Labor_Total = Labor_Total + Convert.ToDecimal(DetailedSheetList[DetailsCounter].I);
+                            TotalProduces_Total = TotalProduces_Total + Convert.ToDecimal(DetailedSheetList[DetailsCounter].J);
+
+                            if (DetailsCounter < DetailedSheetList.Count-1) {
+                                DetailedWorkSheet.InsertRow((sheetrRow + 1), 1);
+                                DetailedWorkSheet.Cells[sheetrRow, 1, sheetrRow, 100].Copy(DetailedWorkSheet.Cells[(sheetrRow + 1), 1, (sheetrRow + 1), 1]);
+                                sheetrRow++;
+                            }
+                        }
+                        int TotalRow = sheetrRow + 1;
+                        DetailedWorkSheet.Cells[TotalRow, 7].Value = QTY_Total;
+                        DetailedWorkSheet.Cells[TotalRow, 9].Value = Labor_Total;
+                        DetailedWorkSheet.Cells[TotalRow, 10].Value = TotalProduces_Total;
+
+                        if (groupedWorkCenterClassificationCounter < groupedWorkCenterClassification.Count-1)
+                        {
+                            
+                            sheetrRow++;
+                            DetailedWorkSheet.InsertRow((sheetrRow + 1), 1);//Space
+                            sheetrRow++;
+                            //Classification Header
+                            DetailedWorkSheet.InsertRow((sheetrRow + 1), 1);
+                            DetailedWorkSheet.Cells[5, 1, 5, 100].Copy(DetailedWorkSheet.Cells[(sheetrRow + 1), 1, (sheetrRow + 1), 1]);
+                            sheetrRow++;
+                            //End Classification Header
+
+                            //Details Header
+                            DetailedWorkSheet.InsertRow((sheetrRow + 1), 1);
+                            DetailedWorkSheet.Cells[6, 1, 6, 100].Copy(DetailedWorkSheet.Cells[(sheetrRow + 1), 1, (sheetrRow + 1), 1]);
+                            sheetrRow++;
+                            //End Details Header
+
+                            //Details Content
+                            DetailedWorkSheet.InsertRow((sheetrRow + 1), 1);
+                            DetailedWorkSheet.Cells[7, 1, 7, 100].Copy(DetailedWorkSheet.Cells[(sheetrRow + 1), 1, (sheetrRow + 1), 1]);
+                            sheetrRow++;
+                            //End Details Content
+
+                            //Details Total
+                            DetailedWorkSheet.InsertRow((sheetrRow + 1), 1);
+                            DetailedWorkSheet.Cells[TotalRow, 1, TotalRow, 100].Copy(DetailedWorkSheet.Cells[(sheetrRow + 1), 1, (sheetrRow + 1), 1]);
+                            
+                            //End Details Total
+                        }
+                        groupedWorkCenterClassificationCounter++;
+                    }
+                    #endregion
                     return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "LSP_Rpt_ProductivityIndexReport.xls");
                 }
 
